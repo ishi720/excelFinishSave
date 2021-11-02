@@ -38,10 +38,14 @@ foreach($item in $itemList) {
 
         # 存在するシート分処理する
         foreach ($s in $book.sheets){
-            $sheet = $book.Sheets.item($s.name)
-            $sheet.Activate()
-            $sheet.Range("A1").Select()
             echo $s.name
+            if ($s.Visible) {
+                $sheet = $book.Sheets.item($s.name)
+                $sheet.Activate()
+                $sheet.Range("A1").Select()
+            } else {
+                echo "非表示シートのためスキップ"
+            }
         }
 
         # 一番左のシートをアクティブにする
