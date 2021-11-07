@@ -10,8 +10,33 @@ function extensionCheck($fileName) {
     return $extArr.Contains($targetExt)
 }
 
-# カレントディレクトリを変数にセット
-$targetDir = [System.IO.Directory]::GetCurrentDirectory()
+# 存在しているディレクトリを判定する関数
+function directoryCheck($Path) {
+    $result = $False
+    if (Test-Path $Path) {
+        if ((Get-Item $Path).PSIsContainer) {
+            $result = $True
+        }
+    }
+    return $result
+}
+
+if ($Args[0]) {
+    # 引数が指定されている場合
+    if (directoryCheck($Args[0])) {
+        # ディレクトリが存在している場合
+        $targetDir = $Args[0]
+    } else {
+        # ディレクトリが存在していない場合
+        Write-Host "[Error] The process ends because the target directory does not exist."
+        Write-Host Directory: $Args[0]
+        exit
+    }
+} else {
+    # 引数が指定されていない場合
+    # カレントディレクトリを変数にセット
+    $targetDir = [System.IO.Directory]::GetCurrentDirectory()
+}
 
 # エクセル操作初期化
 $excel = New-Object -ComObject Excel.Application
