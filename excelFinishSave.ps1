@@ -1,9 +1,16 @@
 ###
-# カレントディレクトリ内のエクセルファイル(.xlsx)を
+# カレントディレクトリ内のエクセルファイル(.xlsm,.xlsx)を
 # 「全シート"A1"セルを選択」かつ「一番左のシートを表示」して保存する。
+#
+# Usage:
+#   $Args[0] - 処理対象のディレクトリ（未指定の場合は、カレントディレクトリ）
 ###
 
-# 拡張子のチェック関数
+
+
+# 処理対象の拡張子をチェックする関数
+# @param $fileName ファイル名
+# @return boolean
 function extensionCheck($fileName) {
     $extArr = @('.xlsm','.xlsx')
     $targetExt = [System.IO.Path]::GetExtension("$fileName")
@@ -11,6 +18,8 @@ function extensionCheck($fileName) {
 }
 
 # 存在しているディレクトリを判定する関数
+# @param $Path 対象ディレクトリのPATH
+# @return boolean
 function directoryCheck($Path) {
     $result = $False
     if (Test-Path $Path) {
