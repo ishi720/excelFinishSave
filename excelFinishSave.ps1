@@ -76,6 +76,7 @@ foreach($item in $itemList) {
             if ($s.Visible) {
                 $sheet = $book.Sheets.item($s.name)
                 $sheet.Activate()
+                $excel.ActiveWindow.Zoom = 100
                 $sheet.Range("A1").Select()
             } else {
                 echo "非表示シートのためスキップ"
