@@ -6,7 +6,9 @@
 #   $Args[0] - 処理対象のディレクトリ（未指定の場合は、カレントディレクトリ）
 ###
 
-
+###
+# 関数
+###
 
 # 処理対象の拡張子をチェックする関数
 # @param $fileName ファイル名
@@ -29,6 +31,10 @@ function directoryCheck($Path) {
     }
     return $result
 }
+
+###
+# メイン処理
+###
 
 if ($Args[0]) {
     # 引数が指定されている場合
@@ -60,26 +66,25 @@ foreach($item in $itemList) {
     # 処理対象のファイルを変数にセット
     $targetFile = Join-Path $targetDir $item.Name
 
+    # 処理対象ファイル名表示
+    Write-Host "FileName:" $targetFile
 
     # 拡張子のチェック
     if (extensionCheck($targetFile)) {
-
-        # 処理対象ファイル名表示
-        echo $targetFile
 
         # エクセルを開く
         $book = $excel.Workbooks.Open($targetFile)
 
         # 存在するシート分処理する
         foreach ($s in $book.sheets){
-            echo $s.name
             if ($s.Visible) {
                 $sheet = $book.Sheets.item($s.name)
                 $sheet.Activate()
                 $excel.ActiveWindow.Zoom = 100
-                $sheet.Range("A1").Select()
+                $sheet.Range("A1").Select() | out-null
+                Write-Host "  SheetName:" $s.name " [Processing completed.]"
             } else {
-                echo "非表示シートのためスキップ"
+                Write-Host "  SheetName:" $s.name " [Hidden sheet skip.]"
             }
         }
 
@@ -91,6 +96,11 @@ foreach($item in $itemList) {
 
         # 閉じる
         $book.Close()
+
+        Write-Host "  Saved`r`n"
+
+    } else {
+        Write-Host "  Skip because the extensions do not match.`r`n"
     }
 }
 
