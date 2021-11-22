@@ -25,7 +25,6 @@ function fileSelect() {
 
     # ダイアログ表示
     if($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK){
-        # 複数選択を許可している時は $dialog.FileNames を利用する
         return $dialog.FileNames
     } else {
         return $null
@@ -44,10 +43,7 @@ $excel.Visible = $False
 
 # 処理ファイルの選択
 $itemList = fileSelect
-foreach($item in $itemList) {
-
-    # 処理対象のファイルを変数にセット
-    $targetFile = $item
+foreach($targetFile in $itemList) {
 
     # 処理対象ファイル名表示
     Write-Host "FileName:" $targetFile
