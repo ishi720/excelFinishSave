@@ -12,19 +12,7 @@
 
 # 実行方法
 
-## 引数なしで実行する（カレントディレクトリ内を処理）
-
-1. `excelFinishSave.ps1`を処理したいフォルダに設置
-1. PowerShellで以下のコマンド実行
-
-```ps1
-PowerShell -ExecutionPolicy RemoteSigned ".\excelFinishSave.ps1"
-```
-
-## 引数ありで実行する（対象フォルダ内を処理）
-
-1. PowerShellで以下のコマンド実行
-
-```ps1
-PowerShell -ExecutionPolicy RemoteSigned ".\excelFinishSave.ps1" {フォルダPATH}
-```
+- `excelFinishSave.ps1`を右クリック
+- 「PowerShellで実行」を開く
+- ダイアログが開くので、処理したいファイルを選択（複数可）し「開く」を押下
+- 選択したファイルの処理が行われる
