@@ -12,7 +12,7 @@
 function fileSelect() {
     [void][System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms")
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
-    $dialog.Filter = "エクセルファイル|*.xlsx;*.xlsm;"
+    $dialog.Filter = "Excelファイル形式|*.xlsx;*.xlsm;*.xlsb;*.xltx;*.xltm;*.xls;*.xlt;*.xls;*.xml;*.xlam;*.xla;*.xlw;*.xlr;"
 
     # 起動時のディレクトリPath
     $dialog.InitialDirectory = Convert-Path .
