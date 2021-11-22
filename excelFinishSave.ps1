@@ -1,57 +1,40 @@
 ###
-# カレントディレクトリ内のエクセルファイル(.xlsm,.xlsx)を
+# 指定したのエクセルファイル(.xlsm,.xlsx)を
 # 「全シート"A1"セルを選択」かつ「一番左のシートを表示」して保存する。
-#
-# Usage:
-#   $Args[0] - 処理対象のディレクトリ（未指定の場合は、カレントディレクトリ）
 ###
 
 ###
 # 関数
 ###
 
-# 処理対象の拡張子をチェックする関数
-# @param $fileName ファイル名
-# @return boolean
-function extensionCheck($fileName) {
-    $extArr = @('.xlsm','.xlsx')
-    $targetExt = [System.IO.Path]::GetExtension("$fileName")
-    return $extArr.Contains($targetExt)
-}
+# ダイアログを出して、ファイルを選択する
+# @return fileList ファイルリスト
+function fileSelect() {
+    [void][System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms")
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    $dialog.Filter = "エクセルファイル|*.xlsx;*.xlsm;"
 
-# 存在しているディレクトリを判定する関数
-# @param $Path 対象ディレクトリのPATH
-# @return boolean
-function directoryCheck($Path) {
-    $result = $False
-    if (Test-Path $Path) {
-        if ((Get-Item $Path).PSIsContainer) {
-            $result = $True
-        }
+    # 起動時のディレクトリPath
+    $dialog.InitialDirectory = Convert-Path .
+
+    # ダイアログウインドウタイトル
+    $dialog.Title = "ファイル選択"
+
+    # 複数選択
+    $dialog.Multiselect = $true
+
+    # ダイアログ表示
+    if($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK){
+        # 複数選択を許可している時は $dialog.FileNames を利用する
+        return $dialog.FileNames
+    } else {
+        return $null
     }
-    return $result
 }
 
 ###
 # メイン処理
 ###
-
-if ($Args[0]) {
-    # 引数が指定されている場合
-    if (directoryCheck($Args[0])) {
-        # ディレクトリが存在している場合
-        $targetDir = $Args[0]
-    } else {
-        # ディレクトリが存在していない場合
-        Write-Host "[Error] The process ends because the target directory does not exist."
-        Write-Host Directory: $Args[0]
-        exit
-    }
-} else {
-    # 引数が指定されていない場合
-    # カレントディレクトリを変数にセット
-    $targetDir = [System.IO.Directory]::GetCurrentDirectory()
-}
 
 # エクセル操作初期化
 $excel = New-Object -ComObject Excel.Application
@@ -59,49 +42,42 @@ $excel = New-Object -ComObject Excel.Application
 # エクセル可視化
 $excel.Visible = $False
 
-# カレントディレクトリ内のファイル分処理を行う
-$itemList = Get-ChildItem "./"
+# 処理ファイルの選択
+$itemList = fileSelect
 foreach($item in $itemList) {
 
     # 処理対象のファイルを変数にセット
-    $targetFile = Join-Path $targetDir $item.Name
+    $targetFile = $item
 
     # 処理対象ファイル名表示
     Write-Host "FileName:" $targetFile
 
-    # 拡張子のチェック
-    if (extensionCheck($targetFile)) {
+    # エクセルを開く
+    $book = $excel.Workbooks.Open($targetFile)
 
-        # エクセルを開く
-        $book = $excel.Workbooks.Open($targetFile)
-
-        # 存在するシート分処理する
-        foreach ($s in $book.sheets){
-            if ($s.Visible) {
-                $sheet = $book.Sheets.item($s.name)
-                $sheet.Activate()
-                $excel.ActiveWindow.Zoom = 100
-                $sheet.Range("A1").Select() | out-null
-                Write-Host "  SheetName:" $s.name " [Processing completed.]"
-            } else {
-                Write-Host "  SheetName:" $s.name " [Hidden sheet skip.]"
-            }
+    # 存在するシート分処理する
+    foreach ($s in $book.sheets){
+        if ($s.Visible) {
+            $sheet = $book.Sheets.item($s.name)
+            $sheet.Activate()
+            $excel.ActiveWindow.Zoom = 100
+            $sheet.Range("A1").Select() | out-null
+            Write-Host "  SheetName:" $s.name " [Processing completed.]"
+        } else {
+            Write-Host "  SheetName:" $s.name " [Hidden sheet skip.]"
         }
-
-        # 一番左のシートをアクティブにする
-        $book.Sheets.item(1).Activate()
-
-        # 保存
-        $book.Save()
-
-        # 閉じる
-        $book.Close()
-
-        Write-Host "  Saved`r`n"
-
-    } else {
-        Write-Host "  Skip because the extensions do not match.`r`n"
     }
+
+    # 一番左のシートをアクティブにする
+    $book.Sheets.item(1).Activate()
+
+    # 保存
+    $book.Save()
+
+    # 閉じる
+    $book.Close()
+
+    Write-Host "  Saved`r`n"
 }
 
 # 後始末
