@@ -57,7 +57,12 @@ foreach($targetFile in $itemList) {
             $sheet = $book.Sheets.item($s.name)
             $sheet.Activate()
             if ($excel.ActiveWindow.FreezePanes) {
-                $excel.ActiveWindow.SmallScroll(-$excel.ActiveWindow.ScrollRow)
+                $excel.ActiveWindow.SmallScroll(
+                    0,
+                    $excel.ActiveWindow.ScrollRow,
+                    0,
+                    $excel.ActiveWindow.ScrollColum
+                )
             }
             $excel.ActiveWindow.Zoom = 100
             $sheet.Range("A1").Select() | out-null
