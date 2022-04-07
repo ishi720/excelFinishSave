@@ -61,7 +61,7 @@ foreach($targetFile in $itemList) {
                     0,
                     $excel.ActiveWindow.ScrollRow,
                     0,
-                    $excel.ActiveWindow.ScrollColum
+                    $excel.ActiveWindow.ScrollColumn
                 )
             }
             $excel.ActiveWindow.Zoom = 100
