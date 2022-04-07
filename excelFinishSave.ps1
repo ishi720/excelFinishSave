@@ -56,6 +56,9 @@ foreach($targetFile in $itemList) {
         if ($s.Visible) {
             $sheet = $book.Sheets.item($s.name)
             $sheet.Activate()
+            if ($excel.ActiveWindow.FreezePanes) {
+                $excel.ActiveWindow.SmallScroll(-$excel.ActiveWindow.ScrollRow)
+            }
             $excel.ActiveWindow.Zoom = 100
             $sheet.Range("A1").Select() | out-null
             Write-Host "  SheetName:" $s.name " [Processing completed.]"
