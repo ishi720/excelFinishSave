@@ -62,7 +62,7 @@ foreach($targetFile in $itemList) {
                     $excel.ActiveWindow.ScrollRow,
                     0,
                     $excel.ActiveWindow.ScrollColumn
-                )
+                ) | out-null
             }
             $excel.ActiveWindow.Zoom = 100
             $sheet.Range("A1").Select() | out-null
@@ -88,3 +88,5 @@ foreach($targetFile in $itemList) {
 $excel.Quit()
 $excel = $null
 [GC]::Collect()
+
+Pause
