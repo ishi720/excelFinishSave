@@ -10,7 +10,7 @@
 # ダイアログを出して、ファイルを選択する
 # @return fileList ファイルリスト
 function fileSelect() {
-    [void][System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms")
+    Add-Type -AssemblyName System.Windows.Forms
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
     $dialog.Filter = "Excelファイル形式|*.xlsx;*.xlsm;*.xlsb;*.xltx;*.xltm;*.xls;*.xlt;*.xls;*.xml;*.xlam;*.xla;*.xlw;*.xlr;"
 
