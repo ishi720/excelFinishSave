@@ -1,0 +1,6 @@
+{
+    "editor.renderWhitespace": "all",
+    "editor.tabSize": 4,
+    "files.trimTrailingWhitespace": true,
+    "window.title":"${dirty}${activeEditorMedium}${separator}${rootName}"
+}
