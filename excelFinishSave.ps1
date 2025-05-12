@@ -1,29 +1,29 @@
-###
-# w’è‚µ‚½‚ÌƒGƒNƒZƒ‹ƒtƒ@ƒCƒ‹(.xlsm,.xlsx)‚ğ
-# u‘SƒV[ƒg"A1"ƒZƒ‹‚ğ‘I‘ğv‚©‚Âuˆê”Ô¶‚ÌƒV[ƒg‚ğ•\¦v‚µ‚Ä•Û‘¶‚·‚éB
-###
-
-###
-# ŠÖ”
+ï»¿###
+# æŒ‡å®šã—ãŸã®ã‚¨ã‚¯ã‚»ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«(.xlsm,.xlsx)ã‚’
+# ã€Œå…¨ã‚·ãƒ¼ãƒˆ"A1"ã‚»ãƒ«ã‚’é¸æŠã€ã‹ã¤ã€Œä¸€ç•ªå·¦ã®ã‚·ãƒ¼ãƒˆã‚’è¡¨ç¤ºã€ã—ã¦ä¿å­˜ã™ã‚‹ã€‚
 ###
 
-# ƒ_ƒCƒAƒƒO‚ğo‚µ‚ÄAƒtƒ@ƒCƒ‹‚ğ‘I‘ğ‚·‚é
-# @return fileList ƒtƒ@ƒCƒ‹ƒŠƒXƒg
+###
+# é–¢æ•°
+###
+
+# ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã—ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã™ã‚‹
+# @return fileList ãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆ
 function fileSelect() {
     Add-Type -AssemblyName System.Windows.Forms
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
-    $dialog.Filter = "Excelƒtƒ@ƒCƒ‹Œ`®|*.xlsx;*.xlsm;*.xlsb;*.xltx;*.xltm;*.xls;*.xlt;*.xls;*.xml;*.xlam;*.xla;*.xlw;*.xlr;"
+    $dialog.Filter = "Excelãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼|*.xlsx;*.xlsm;*.xlsb;*.xltx;*.xltm;*.xls;*.xlt;*.xls;*.xml;*.xlam;*.xla;*.xlw;*.xlr;"
 
-    # ‹N“®‚ÌƒfƒBƒŒƒNƒgƒŠPath
+    # èµ·å‹•æ™‚ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªPath
     $dialog.InitialDirectory = Convert-Path .
 
-    # ƒ_ƒCƒAƒƒOƒEƒCƒ“ƒhƒEƒ^ƒCƒgƒ‹
-    $dialog.Title = "ƒtƒ@ƒCƒ‹‘I‘ğ"
+    # ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚¿ã‚¤ãƒˆãƒ«
+    $dialog.Title = "ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠ"
 
-    # •¡”‘I‘ğ
+    # è¤‡æ•°é¸æŠ
     $dialog.Multiselect = $true
 
-    # ƒ_ƒCƒAƒƒO•\¦
+    # ãƒ€ã‚¤ã‚¢ãƒ­ã‚°è¡¨ç¤º
     if($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK){
         return $dialog.FileNames
     } else {
@@ -32,26 +32,26 @@ function fileSelect() {
 }
 
 ###
-# ƒƒCƒ“ˆ—
+# ãƒ¡ã‚¤ãƒ³å‡¦ç†
 ###
 
-# ƒGƒNƒZƒ‹‘€ì‰Šú‰»
+# ã‚¨ã‚¯ã‚»ãƒ«æ“ä½œåˆæœŸåŒ–
 $excel = New-Object -ComObject Excel.Application
 
-# ƒGƒNƒZƒ‹‰Â‹‰»
+# ã‚¨ã‚¯ã‚»ãƒ«å¯è¦–åŒ–
 $excel.Visible = $False
 
-# ˆ—ƒtƒ@ƒCƒ‹‚Ì‘I‘ğ
+# å‡¦ç†ãƒ•ã‚¡ã‚¤ãƒ«ã®é¸æŠ
 $itemList = fileSelect
 foreach($targetFile in $itemList) {
 
-    # ˆ—‘ÎÛƒtƒ@ƒCƒ‹–¼•\¦
+    # å‡¦ç†å¯¾è±¡ãƒ•ã‚¡ã‚¤ãƒ«åè¡¨ç¤º
     Write-Host "FileName:" $targetFile
 
-    # ƒGƒNƒZƒ‹‚ğŠJ‚­
+    # ã‚¨ã‚¯ã‚»ãƒ«ã‚’é–‹ã
     $book = $excel.Workbooks.Open($targetFile)
 
-    # ‘¶İ‚·‚éƒV[ƒg•ªˆ—‚·‚é
+    # å­˜åœ¨ã™ã‚‹ã‚·ãƒ¼ãƒˆåˆ†å‡¦ç†ã™ã‚‹
     foreach ($s in $book.sheets){
         if ($s.Visible) {
             $sheet = $book.Sheets.item($s.name)
@@ -72,19 +72,19 @@ foreach($targetFile in $itemList) {
         }
     }
 
-    # ˆê”Ô¶‚ÌƒV[ƒg‚ğƒAƒNƒeƒBƒu‚É‚·‚é
+    # ä¸€ç•ªå·¦ã®ã‚·ãƒ¼ãƒˆã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹
     $book.Sheets.item(1).Activate()
 
-    # •Û‘¶
+    # ä¿å­˜
     $book.Save()
 
-    # •Â‚¶‚é
+    # é–‰ã˜ã‚‹
     $book.Close()
 
     Write-Host "  Saved`r`n"
 }
 
-# Œãn––
+# å¾Œå§‹æœ«
 $excel.Quit()
 $excel = $null
 [GC]::Collect()
