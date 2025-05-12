@@ -1,6 +1,7 @@
 ﻿###
-# 指定したのエクセルファイル(.xlsm,.xlsx)を
-# 「全シート"A1"セルを選択」かつ「一番左のシートを表示」して保存する。
+# エクセルファイルをカーソル位置などを初期状態に戻し保存する。
+# ・全シート"A1"セルを選択
+# ・一番左のシートを表示
 ###
 
 ###
@@ -31,6 +32,29 @@ function fileSelect() {
     }
 }
 
+# シートの処理を行う関数
+# @param $sheet 処理対象のシート
+# @param $book エクセルブック
+function processSheet($sheet, $book) {
+    if ($sheet.Visible) {
+        $sheet.Activate()
+        if ($book.Application.ActiveWindow.FreezePanes) {
+            $book.Application.ActiveWindow.SmallScroll(
+                0,
+                $book.Application.ActiveWindow.ScrollRow,
+                0,
+                $book.Application.ActiveWindow.ScrollColumn
+            ) | Out-Null
+        }
+        $book.Application.ActiveWindow.Zoom = 100
+        $sheet.Range("A1").Select() | Out-Null
+        Write-Host "  SheetName: $($sheet.Name) [Processing completed.]"
+    } else {
+        Write-Host "  SheetName: $($sheet.Name) [Hidden sheet skipped.]"
+    }
+}
+
+
 ###
 # メイン処理
 ###
@@ -51,25 +75,9 @@ foreach ($targetFile in $itemList) {
     # エクセルを開く
     $book = $excel.Workbooks.Open($targetFile)
 
-    # 存在するシート分処理する
-    foreach ($s in $book.sheets) {
-        if ($s.Visible) {
-            $sheet = $book.Sheets.item($s.name)
-            $sheet.Activate()
-            if ($excel.ActiveWindow.FreezePanes) {
-                $excel.ActiveWindow.SmallScroll(
-                    0,
-                    $excel.ActiveWindow.ScrollRow,
-                    0,
-                    $excel.ActiveWindow.ScrollColumn
-                ) | out-null
-            }
-            $excel.ActiveWindow.Zoom = 100
-            $sheet.Range("A1").Select() | out-null
-            Write-Host "  SheetName:" $s.name " [Processing completed.]"
-        } else {
-            Write-Host "  SheetName:" $s.name " [Hidden sheet skip.]"
-        }
+    # 各シートに毎に処理を行う
+    foreach ($sheet in $book.sheets) {
+        processSheet $sheet $book
     }
 
     # 一番左のシートをアクティブにする
