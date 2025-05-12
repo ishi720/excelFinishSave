@@ -24,7 +24,7 @@ function fileSelect() {
     $dialog.Multiselect = $true
 
     # ダイアログ表示
-    if($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK){
+    if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         return $dialog.FileNames
     } else {
         return $null
@@ -43,7 +43,7 @@ $excel.Visible = $False
 
 # 処理ファイルの選択
 $itemList = fileSelect
-foreach($targetFile in $itemList) {
+foreach ($targetFile in $itemList) {
 
     # 処理対象ファイル名表示
     Write-Host "FileName:" $targetFile
@@ -52,7 +52,7 @@ foreach($targetFile in $itemList) {
     $book = $excel.Workbooks.Open($targetFile)
 
     # 存在するシート分処理する
-    foreach ($s in $book.sheets){
+    foreach ($s in $book.sheets) {
         if ($s.Visible) {
             $sheet = $book.Sheets.item($s.name)
             $sheet.Activate()
@@ -79,7 +79,7 @@ foreach($targetFile in $itemList) {
     $book.Save()
 
     # 閉じる
-    $book.Close()
+    $book.Close($false)
 
     Write-Host "  Saved`r`n"
 }
